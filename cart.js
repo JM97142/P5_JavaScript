@@ -11,11 +11,14 @@ fetch("http://localhost:3000/api/products")
         productsContainer.style.padding = "30vh 0";
     })
 
+// DOM
 .then(function (resultatAPI) {
     let ProduitEnregistrelocalstrorage;
 
 if (localStorage.getItem("produit")) {
   ProduitEnregistrelocalstrorage = JSON.parse(localStorage.getItem("produit"));
+
+    var prixTotal = 0;
 
     for (var i = 0; i < ProduitEnregistrelocalstrorage.length; i++) {
         let productArticle = document.createElement("article");
@@ -54,9 +57,7 @@ if (localStorage.getItem("produit")) {
 
         let carItemContentSettingsQuantity = document.createElement("div");
         carItemContentSettings.appendChild(carItemContentSettingsQuantity);
-        carItemContentSettingsQuantity.classList.add(
-        "cart__item__content__settings__quantity"
-        );
+        carItemContentSettingsQuantity.classList.add("cart__item__content__settings__quantity");
 
         let Quantité = document.createElement("p");
         carItemContentSettingsQuantity.appendChild(Quantité);
@@ -80,14 +81,28 @@ if (localStorage.getItem("produit")) {
         buttonDelete.classList.add("deleteItem");
         buttonDelete.innerHTML = "Supprimer";
 
-        buttonDelete.addEventListener("click", (e) => {
-            let idProduitDelete = ProduitEnregistrelocalstrorage[i].id_Produit;
-            let optionProduitdelete = ProduitEnregistrelocalstrorage[i].choixFormulaire;
+        //Supprimer un produit du panier
+        supprimerSelection = Array.from(document.querySelectorAll(".deleteItem"));
+      
+        let tab = [];
 
-        });
+        prixTotal = prixTotal + ProduitEnregistrelocalstrorage[i].prix;
+        alert(prixTotal);
+      
+        for (let i = 0; i < supprimerSelection.length; i++) {
+            supprimerSelection[i].addEventListener("click", () => {
+            tab = ProduitEnregistrelocalstrorage;
+            tab.splice([i], 1);
+            console.log(tab);
+
+            ProduitEnregistrelocalstrorage = localStorage.setItem(
+                "produit",
+                JSON.stringify(tab)
+            );
+
+            window.location.href = "cart.html";
+            });
+        } 
     }
-
-} else {
-
 }
 });
