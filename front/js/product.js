@@ -1,3 +1,4 @@
+// On récupère l'id du produit dans l'URL de l'API
 function getProduct() {
   var str = document.URL;
   var url = new URL(str);
@@ -23,6 +24,7 @@ function getProduct() {
 
     // DOM
     .then(function (resultatAPI) {
+      // On crée la fiche du produit correspondant
       const articles = resultatAPI;
       let productImg = document.createElement("img");
       document.querySelector(".item__img").appendChild(productImg);
@@ -39,6 +41,7 @@ function getProduct() {
       productDescription.innerHTML = articles.description;
 
       select = document.getElementById("colors");
+      // On récupère chaque valeur de couleur disponible
       for (let index in articles.colors) {
         i = articles.colors[index];
         var opt = document.createElement("option");
@@ -48,16 +51,21 @@ function getProduct() {
       }
 
       const btn = document.getElementById("addToCart");
+      // On ajoute l'évènement click au bouton
       btn.addEventListener("click", (e) => {
+        // On récupère le choix de la couleur
         const choixFormulaire = select.value;
 
         quantity = document.getElementById("quantity");
+        // On récupère le choix de la quantité
         const quantitéFormulaire = quantity.value;
+        // On vérifie qu'une quantité et qu'une couleur a ont été sélectionnés
         if (quantitéFormulaire == 0) {
           alert("Tu n'a pas choisi la quantité");
         } else if (choixFormulaire == "") {
           alert("Tu n'a pas choisi la couleur");
         } else {
+          //création de la variable locale de la sélection
           let optionsProduit = {
             nomProduit: articles.name,
             id_Produit: articles._id,
@@ -68,7 +76,7 @@ function getProduct() {
             Produit_alt: articles.altTxt,
           };
           console.log(optionsProduit);
-          // Local Storage
+          // Popup confirmation de l'ajout du produit
           const popupConfirmation = () => {
             if (
               window.confirm(`L'article ${articles.name} ${choixFormulaire} est ajouté au panier
@@ -82,8 +90,8 @@ Pour consulter votre panier, cliquez sur OK`)
             localStorage.getItem("produit")
           );
           console.log(ProduitEnregistrelocalstrorage);
-          
-          // si il y deja des produit dans le localSTorage
+
+          // On vérifie si il y deja des produits dans le localStorage
           if (ProduitEnregistrelocalstrorage) {
             const productFind = ProduitEnregistrelocalstrorage.find(
               (el) => el.id_Produit === articles._id && el.option_produit === choixFormulaire);
@@ -110,7 +118,7 @@ Pour consulter votre panier, cliquez sur OK`)
               popupConfirmation();
             }
 
-            // si il n'y a pas de produit dans le localSTorage
+            // S'il n'y a pas de produit dans le localStorage
           } else {
             ProduitEnregistrelocalstrorage = [];
             ProduitEnregistrelocalstrorage.push(optionsProduit);

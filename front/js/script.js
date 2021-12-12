@@ -1,6 +1,7 @@
 // On récupère la liste des produits
 fetch("http://localhost:3000/api/products")
     .then(function (res) {
+        // On vérifie si la réponse est valide
         if (res.ok) {
             return res.json();
         }
@@ -16,6 +17,7 @@ fetch("http://localhost:3000/api/products")
 .then(function (resultatAPI) {
     const articles = resultatAPI;
     console.log(articles);
+    // On crée une fiche sur index.html pour chaque produit
     for (let article in articles) {
         let productLink = document.createElement("a");
         document.querySelector(".items").appendChild(productLink);

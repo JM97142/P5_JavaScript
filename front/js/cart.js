@@ -1,9 +1,9 @@
 if (localStorage.getItem("produit")) {
     ProduitEnregistrelocalstrorage = JSON.parse(localStorage.getItem("produit"));
   
-      let arrayQuantity = [];
-      let arrayPrice = [];
-  
+      let arrayQuantity = 0;
+      let arrayPrice = 0;
+      // On crée les fiches produits dans le panier
       for (var i = 0; i < ProduitEnregistrelocalstrorage.length; i++) {
           let productArticle = document.createElement("article");
           document.getElementById("cart__items").appendChild(productArticle);
@@ -86,7 +86,7 @@ if (localStorage.getItem("produit")) {
           let totalPrice = document.getElementById("totalPrice");
           totalPrice.innerHTML = totalPrix;
   
-          // supprimer un element
+          // Supprimer un element
           supprimerSelection = Array.from(document.querySelectorAll(".deleteItem"));
           let tab = [];
           for (let i = 0; i < supprimerSelection.length; i++) {
@@ -104,7 +104,7 @@ if (localStorage.getItem("produit")) {
               });
           }
   
-          // changer la quantité
+          // Changer la quantité
           itemQuantity.addEventListener("change", function () {
               let r2 = itemQuantity.closest("article");
               console.log(r2.getAttribute("data-id"));
@@ -125,80 +125,101 @@ if (localStorage.getItem("produit")) {
               }
           });
   
-          //on vérifier les inputs du formulaire
-          let firstName = document.getElementById('firstName');
-          let firstNameError = document.getElementById('firstNameErrorMsg');
-          verificationName('firstName', 'firstNameErrorMsg');
+          // Formulaire
+          let inputName = document.querySelector("#firstName");
+          let inputNameErreur = document.querySelector("#firstNameErrorMsg");
   
-          let lastName = document.getElementById('lastName');
-          let lastNameError = document.getElementById('lastNameErrorMsg');
-          verificationName('lastName', 'lastNameErrorMsg');
+          let inputLastName = document.querySelector("#lastName");
+          let inputLastErreur = document.querySelector("#lastNameErrorMsg");
   
-          let city = document.getElementById('city');
-          let cityError = document.getElementById('cityErrorMsg');
-          verificationName('city', 'cityErrorMsg');
+          let inputAdress = document.querySelector("#address");
+          let inputAdressErreur = document.querySelector("#addressErrorMsg");
   
-          let address = document.getElementById('address');
-          let addressError = document.getElementById('addressErrorMsg');
-          verificationAdress('address', 'addressErrorMsg');
+          let inputCity = document.querySelector("#city");
+          let inputCityErreur = document.querySelector("#cityErrorMsg");
   
-          let email = document.getElementById('email');
-          let emailError = document.getElementById('emailErrorMsg');
-          verificationEmail('email', 'emailErrorMsg');
+          let inputMail = document.querySelector("#email");
+          let inputMailErreur = document.querySelector("#emailErrorMsg");
   
-          //on attend la submission afin de créer la fiche client
-          document
-              .getElementById('order')
-              .addEventListener('click',function(e){
+          // Fonction REGEX pour vérifier que l'email est valide
+          function validateEmail(email) {
+              var re = /\S+@\S+\.\S+/;
+              return re.test(email);
+          }
+  
+          const newOrder = document.querySelector("#order");
+  
+          newOrder.addEventListener("click", (e) => {
+              // On reset les valeurs des inputs
+              inputNameErreur.innerHTML = "";
+              inputLastErreur.innerHTML = "";
+              inputCityErreur.innerHTML = "";
+              inputAdressErreur.innerHTML = "";
+              inputMailErreur.innerHTML = "";
+              // On vérifie les inputs du formulaire
+              e.preventDefault();
+              if (!inputName.value) {
+                  inputNameErreur.innerHTML = "Vous devez renseigner un prénom";
                   e.preventDefault();
-                  if (firstName.value==''|| lastName.value ==''|| city.value ==''|| address.value ==''|| email.value ==undefined|| firstNameError.innerHTML !== '' || lastNameError.innerHTML !== '' || cityError.innerHTML !== '' || addressError.innerHTML !== '' || emailError.innerHTML !== ''){
-                  console.log(firstNameError.innerHTML);
-                  alert('Vos information ne sont pas correct\nVeuillez vérifier que tous les champs soient remplis');
-                  }
-                  else{
-                  console.log('ok')
-                  let productOrder =[];
-                  let cart = JSON.parse(localStorage.getItem('cart'));
-                  for (let i in cart){
-                      productOrder.push(cart[i].id)
-                  }
-                  const order = {
-                      contact: {
-                              firstName: document.getElementById('firstName').value,
-                              lastName: document.getElementById('lastName').value,
-                              city:document.getElementById('city').value,
-                              address:document.getElementById('address').value,
-                              email:document.getElementById('email').value,
+              } else if (!inputLastName.value) {
+                  inputLastErreur.innerHTML = "Vous devez renseigner un nom";
+                  e.preventDefault();
+              } else if (!inputCity.value) {
+                  inputCityErreur.innerHTML = "Vous devez renseigner une ville";
+                  e.preventDefault();
+              } else if (!inputAdress.value) {
+                  inputAdressErreur.innerHTML = "Vous devez renseigner une adresse";
+                  e.preventDefault();
+              } else if (!inputMail.value) {
+                  inputMailErreur.innerHTML = "Vous devez renseigner un mail";
+                  e.preventDefault();
+              } else if (!validateEmail(inputMail.value)) {
+                  inputMailErreur.innerHTML = "Vous devez renseigner un mail valide";
+                  e.preventDefault();
+              } else {
+                  let produitAchete = [];
+                  let ProduitEnregistrelocalstrorage = JSON.parse(
+                      localStorage.getItem("produit")
+              );
+              console.log(ProduitEnregistrelocalstrorage.id_Produit);
+  
+              for (let j = 0; j < ProduitEnregistrelocalstrorage.length; j++) {
+                  produitAchete.push(ProduitEnregistrelocalstrorage[j].id_Produit);
+              }
+        
+              const order = {
+                  contact: {
+                      firstName: inputName.value,
+                      lastName: inputLastName.value,
+                      city: inputCity.value,
+                      address: inputAdress.value,
+                      email: inputMail.value,
                       },
-                      products: productOrder,
-                  };
-                  console.log(order);
+                      products: produitAchete,
+              };
+              console.log(order);
   
-          // requete POST
-          let totalPrice = document.getElementById("totalPrice");
-          totalPrice.innerHTML = totalPrix;
+              // requete POST
+              const options = {
+                  method: "POST",
+                  body: JSON.stringify(order),
+                  headers: { "Content-Type": "application/json" },
+              };
+              console.log(JSON.stringify(order));
+              console.log(options);
   
-          const options = {
-              method: "POST",
-              body: JSON.stringify(order),
-              headers: { "Content-Type": "application/json" },
-          };
-          console.log(JSON.stringify(order));
-          console.log(options);
-  
-          fetch("http://localhost:3000/api/products/order", options)
-  
-          .then((response) => response.json())
-          .then((data) => {
-              console.log(data);
-              console.log(data.orderId);
-              localStorage.clear();
-              document.location.href = `confirmation.html?id=${data.orderId}`;
-          })
-          .catch((err) => {
-              alert("Il y a eu une erreur : " + err);
+              fetch("http://localhost:3000/api/products/order", options)
+                  .then((response) => response.json())
+                  .then((data) => {
+                      console.log(data);
+                      console.log(data.orderId);
+                      localStorage.clear();
+                      document.location.href = `confirmation.html?id=${data.orderId}`;
+                  })
+                  .catch((err) => {
+                  alert("Il y a eu une erreur : " + err);
+                  });
+              }
           });
       }
-  });
-  }
   }
