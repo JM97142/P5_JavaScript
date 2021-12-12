@@ -1,8 +1,8 @@
 if (localStorage.getItem("produit")) {
     ProduitEnregistrelocalstrorage = JSON.parse(localStorage.getItem("produit"));
   
-      let arrayQuantity = 0;
-      let arrayPrice = 0;
+      let arrayQuantity = [];
+      let arrayPrice = [];
       // On crée les fiches produits dans le panier
       for (var i = 0; i < ProduitEnregistrelocalstrorage.length; i++) {
           let productArticle = document.createElement("article");
