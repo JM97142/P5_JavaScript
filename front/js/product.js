@@ -118,7 +118,7 @@ Pour consulter votre panier, cliquez sur OK`)
               popupConfirmation();
             }
 
-            // S'il n'y a pas de produit dans le localStorage
+          // S'il n'y a pas de produit dans le localStorage
           } else {
             ProduitEnregistrelocalstrorage = [];
             ProduitEnregistrelocalstrorage.push(optionsProduit);

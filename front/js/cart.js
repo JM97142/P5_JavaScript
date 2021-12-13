@@ -126,20 +126,20 @@ if (localStorage.getItem("produit")) {
           });
   
           // Formulaire
-          let inputName = document.querySelector("#firstName");
-          let inputNameErreur = document.querySelector("#firstNameErrorMsg");
+          let inputName = document.getElementById('firstName');
+          let inputNameErreur = document.getElementById('firstNameErrorMsg');
   
-          let inputLastName = document.querySelector("#lastName");
-          let inputLastErreur = document.querySelector("#lastNameErrorMsg");
+          let inputLastName = document.getElementById('lastName');
+          let inputLastErreur = document.getElementById('lastNameErrorMsg');
   
-          let inputAdress = document.querySelector("#address");
-          let inputAdressErreur = document.querySelector("#addressErrorMsg");
+          let inputAdress = document.getElementById('address');
+          let inputAdressErreur = document.getElementById('addressErrorMsg');
   
-          let inputCity = document.querySelector("#city");
-          let inputCityErreur = document.querySelector("#cityErrorMsg");
+          let inputCity = document.getElementById('city');
+          let inputCityErreur = document.getElementById('cityErrorMsg');
   
-          let inputMail = document.querySelector("#email");
-          let inputMailErreur = document.querySelector("#emailErrorMsg");
+          let inputMail = document.getElementById('email');
+          let inputMailErreur = document.getElementById('emailErrorMsg');
   
           // Fonction REGEX pour vérifier que l'email est valide
           function validateEmail(email) {
@@ -150,7 +150,7 @@ if (localStorage.getItem("produit")) {
           const newOrder = document.querySelector("#order");
   
           newOrder.addEventListener("click", (e) => {
-              // On reset les valeurs des inputs
+              // On reset les valeurs
               inputNameErreur.innerHTML = "";
               inputLastErreur.innerHTML = "";
               inputCityErreur.innerHTML = "";
@@ -189,14 +189,18 @@ if (localStorage.getItem("produit")) {
         
               const order = {
                   contact: {
-                      firstName: inputName.value,
-                      lastName: inputLastName.value,
-                      city: inputCity.value,
-                      address: inputAdress.value,
-                      email: inputMail.value,
+                      firstName: document.getElementById('firstName').value,
+                      lastName: document.getElementById('lastName').value,
+                      city: document.getElementById('city').value,
+                      address: document.getElementById('address').value,
+                      email: document.getElementById('email').value,
                       },
                       products: produitAchete,
               };
+              localStorage.setItem(
+                  "newOrder",
+                  JSON.stringify(order)
+              );
               console.log(order);
   
               // requete POST
@@ -206,14 +210,11 @@ if (localStorage.getItem("produit")) {
                   headers: { "Content-Type": "application/json" },
               };
               console.log(JSON.stringify(order));
-              console.log(options);
+              console.log(order);
   
               fetch("http://localhost:3000/api/products/order", options)
                   .then((response) => response.json())
                   .then((data) => {
-                      console.log(data);
-                      console.log(data.orderId);
-                      localStorage.clear();
                       document.location.href = `confirmation.html?id=${data.orderId}`;
                   })
                   .catch((err) => {
