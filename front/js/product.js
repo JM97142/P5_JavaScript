@@ -91,7 +91,7 @@ Pour consulter votre panier, cliquez sur OK`)
           );
           console.log(ProduitEnregistrelocalstrorage);
 
-          // On vérifie si il y deja des produits dans le localStorage
+          // On vérifie s'il y deja des produits dans le localStorage
           if (ProduitEnregistrelocalstrorage) {
             const productFind = ProduitEnregistrelocalstrorage.find(
               (el) => el.id_Produit === articles._id && el.option_produit === choixFormulaire);
@@ -118,7 +118,7 @@ Pour consulter votre panier, cliquez sur OK`)
               popupConfirmation();
             }
 
-          // S'il n'y a pas de produit dans le localStorage
+            // S'il n'y a pas de produit dans le localStorage
           } else {
             ProduitEnregistrelocalstrorage = [];
             ProduitEnregistrelocalstrorage.push(optionsProduit);
@@ -126,6 +126,8 @@ Pour consulter votre panier, cliquez sur OK`)
               "produit",
               JSON.stringify(ProduitEnregistrelocalstrorage)
             );
+            console.table(ProduitEnregistrelocalstrorage);
+            popupConfirmation();
           }
         }
       });
